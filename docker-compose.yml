@@ -10,7 +10,7 @@ services:
       - ./data:/data
       - ./logs:/app/logs
     environment:
-      - SQL_DSN=root:eZ1rW9jR6clhuP4b@tcp(mysql:3306)/new-api  # Point to the mysql service
+      - SQL_DSN=root:JJCzhn3SpAWhlcGs@tcp(mysql:3306)/new-api  # Point to the mysql service
       - REDIS_CONN_STRING=redis://redis
       - SESSION_SECRET=${SESSION_SECRET}  # Change to a secure, random string
       - TZ=Asia/Shanghai
@@ -43,7 +43,7 @@ services:
     image: mysql:8.2
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: eZ1rW9jR6clhuP4b  # Ensure this matches the password in SQL_DSN
+      MYSQL_ROOT_PASSWORD: JJCzhn3SpAWhlcGs  # Ensure this matches the password in SQL_DSN
       MYSQL_DATABASE: new-api
     volumes:
       - ${APP_PATH}/mysql_data:/var/lib/mysql
