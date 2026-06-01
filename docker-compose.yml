@@ -1,6 +1,9 @@
 services:
   new-api:
-    image: calciumion/new-api:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: new-api:local
     container_name: new-api
     restart: always
     command: --log-dir /app/logs
@@ -14,13 +17,7 @@ services:
       - REDIS_CONN_STRING=redis://redis
       - SESSION_SECRET=${SESSION_SECRET}  # Change to a secure, random string
       - TZ=Asia/Shanghai
-    #      - NODE_TYPE=slave  # Uncomment for slave node in multi-node deployment
-    #      - SYNC_FREQUENCY=60  # Uncomment if regular database syncing is needed
-    #      - FRONTEND_BASE_URL=https://openai.justsong.cn  # Uncomment for multi-node deployment with front-end URL
 
-    depends_on:
-      - redis
-      - mysql
     healthcheck:
       test: [ "CMD-SHELL", "wget -q -O - http://localhost:3000/api/status | grep -o '\"success\":\\s*true' | awk -F: '{print $2}'" ]
       interval: 30s
@@ -30,34 +27,6 @@ services:
       createdBy: "bt_apps"
     networks:
       - baota_net
-
-  redis:
-    image: redis:latest
-    restart: always
-    labels:
-      createdBy: "bt_apps"
-    networks:
-      - baota_net
-
-  mysql:
-    image: mysql:8.2
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: JJCzhn3SpAWhlcGs  # Ensure this matches the password in SQL_DSN
-      MYSQL_DATABASE: new-api
-    volumes:
-      - ${APP_PATH}/mysql_data:/var/lib/mysql
-    labels:
-      createdBy: "bt_apps"
-    networks:
-      - baota_net
-    ports:
-      - "3306:3306"
-    command:
-      - --bind-address=0.0.0.0
-      - --default-authentication-plugin=mysql_native_password
-      - --character-set-server=utf8mb4
-      - --collation-server=utf8mb4_unicode_ci
 
 networks:
   baota_net:
